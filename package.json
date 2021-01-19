@@ -1,0 +1,14 @@
+{
+  "name": "t18",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "docker:build": "docker-compose -p team18_app build",
+    "docker:up": "docker-compose -p team18_app up",
+    "docker:down": "docker-compose -p team18_app down"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

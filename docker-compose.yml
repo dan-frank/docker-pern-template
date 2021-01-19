@@ -1,0 +1,45 @@
+version: "3"
+
+services:
+  team18_db:
+    container_name: team18_db
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_DB: root
+      POSTGRES_PASSWORD: root
+    volumes:
+      - ./db/data:/var/lib/postgresql/data
+      - ./docker_postgres_init.sql:/docker-entrypoint-initdb.d/docker_postgres_init.sql
+    networks:
+      - team18
+  team18_api:
+    container_name: team18_api
+    build:
+      context: ./api
+      dockerfile: Dockerfile.dev # on move to prod, update this
+    volumes:
+      - /api/node_modules
+      - ./api:/api
+    ports:
+      - "3000:3000"
+    depends_on:
+      - team18_db
+    networks:
+      - team18
+  team18_app:
+    container_name: team18_app
+    build:
+      context: ./app
+      dockerfile: Dockerfile.dev # on move to prod, update this
+    volumes:
+      - /app/node_modules
+      - ./app:/app
+    ports:
+      - "8000:3000"
+    networks:
+      - team18
+networks:
+  team18:

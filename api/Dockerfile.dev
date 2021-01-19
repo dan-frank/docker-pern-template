@@ -1,0 +1,10 @@
+FROM node:latest
+RUN mkdir -p /api/config /api/src
+WORKDIR /api
+
+COPY package.json /api/package.json
+COPY package-lock.json /api/package-lock.json
+
+RUN npm install
+
+CMD ["npm", "run", "start:dev"]
