@@ -33,6 +33,19 @@ Stops Docker containers and networks:
 npm run docker:down
 ```
 
+### Access to PgAdmin4
+
+- **URL:** [http://localhost:8000](http://localhost:8000)
+- **Username:** `pgadmin4@pgadmin.org`
+- **Password:** `admin`
+
+#### Add a new server in PgAdmin4
+
+- **Host name/address** `db`
+- **Port** `5432`
+- **Username** `pern_db`
+- **Password** `root`
+
 ## Technologies Used
 
 - Docker

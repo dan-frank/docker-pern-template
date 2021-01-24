@@ -4,9 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "docker:build": "docker-compose -p team18_app build",
-    "docker:up": "docker-compose -p team18_app up",
-    "docker:down": "docker-compose -p team18_app down"
+    "docker:build": "docker-compose -p pern_stack build",
+    "docker:up": "docker-compose -p pern_stack up",
+    "docker:down": "docker-compose -p pern_stack down",
+    "docker:down:volumes": "docker-compose -p pern_stack down --volumes"
   },
   "keywords": [],
   "author": "",

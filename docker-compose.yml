@@ -1,22 +1,38 @@
 version: "3"
 
 services:
-  team18_db:
-    container_name: team18_db
+  db:
+    container_name: db
     image: postgres:latest
-    ports:
-      - "5432:5432"
     environment:
-      POSTGRES_USER: root
-      POSTGRES_DB: root
-      POSTGRES_PASSWORD: root
+      POSTGRES_USER: ${POSTGRES_USER:-pern_db}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-root}
+      PGDATA: /var/lib/postgresql/data
     volumes:
       - ./db/data:/var/lib/postgresql/data
-      - ./docker_postgres_init.sql:/docker-entrypoint-initdb.d/docker_postgres_init.sql
+      - ./db/docker_postgres_init.sql:/docker-entrypoint-initdb.d/docker_postgres_init.sql
+    ports:
+      - "5432:5432"
     networks:
-      - team18
-  team18_api:
-    container_name: team18_api
+      - db
+    restart: unless-stopped
+  db_manager:
+    container_name: db_manager
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-pgadmin4@pgadmin.org}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
+    volumes:
+      - ./db/db_manager:/root/.pgadmin
+    ports:
+      - "${PGADMIN_PORT:-5050}:80"
+    depends_on:
+      - db
+    networks:
+      - db
+    restart: unless-stopped
+  api:
+    container_name: api
     build:
       context: ./api
       dockerfile: Dockerfile.dev # on move to prod, update this
@@ -26,11 +42,13 @@ services:
     ports:
       - "3000:3000"
     depends_on:
-      - team18_db
+      - db
     networks:
-      - team18
-  team18_app:
-    container_name: team18_app
+      - db
+      - app
+    restart: unless-stopped
+  app:
+    container_name: app
     build:
       context: ./app
       dockerfile: Dockerfile.dev # on move to prod, update this
@@ -40,6 +58,9 @@ services:
     ports:
       - "8000:3000"
     networks:
-      - team18
+      - app
+    restart: unless-stopped
 networks:
-  team18:
+  app:
+  db:
+    driver: bridge
